@@ -1,4 +1,6 @@
-const fetch = require('node-fetch');
+'use strict';
+const assert = require('assert');
+var chai = require('chai');
 // Load the full build.
 var _ = require('lodash');
 
@@ -67,9 +69,11 @@ console.log(`
 ================ _.chunk(The array to process., The length of each chunk) ===============
 =========================================================================================
 `)
-const chunkData = _.chunk(myData, 4);
-
-console.log(chunkData);
+const chunkData = (array, chunkSize) => {
+    let dataChunk = _.chunk(array, chunkSize);
+    return dataChunk;
+};
+console.log(chunkData(myData, 4));
 
 console.log(`
 ================================================================
@@ -77,17 +81,23 @@ console.log(`
 ================================================================
 `)
 
-const reverseData = _.reverse(myData)
-console.log(reverseData)
+const reverseData = (array) => {
+    let dataReverse = _.reverse(array)
+    return dataReverse;
+}
 
+console.log(reverseData(myData))
 console.log(`
 ==========================================================================================
 ================ _.without( The array to inspect., The values to exclude.) ===============
 ==========================================================================================
 `)
 
-const withoutData = _.without(myData, myData[1], myData[2])
-console.log(withoutData)
+const withoutData = (array) => {
+    let dataWithout = _.without(array, array[1], array[5])
+    return dataWithout;
+}
+console.log(withoutData(myData))
 
 console.log(`
 ======================================================================
@@ -95,8 +105,11 @@ console.log(`
 ======================================================================
 `)
 
-const shuffleData = _.shuffle(myData)
-console.log(shuffleData)
+const shuffleData = (array) => {
+    let dataShuffle = _.shuffle(array)
+    return dataShuffle;
+}
+console.log(shuffleData(myData))
 
 console.log(`
 ==================================================================================================
@@ -104,17 +117,88 @@ console.log(`
 ==================================================================================================
 `)
 
-const sizeData = _.size(myData);
-console.log(`The size of the array/collection is: ${sizeData}`)
+const sizeData = (array) => {
+    let dataSize = _.size(array);
+    return dataSize;
+}
+console.log(`The size of the array/collection is: ${sizeData(myData)}`)
 
-console.log(`
-==================================================================================================
-========== _.some(The collection to iterate over., The function invoked per iteration.) ========== 
-=============== Returns true if any element passes the predicate check, else false. ==============
-==================================================================================================
-`)
 
-const someData = _.some(myData, { 'gender': 'Male' });
-console.log(`Does the data contain 'Male'?  ${someData}
+// =====================================================================
+// ========================== UNIT TESTING =============================
+// =====================================================================
 
-`);
+if (typeof describe === 'function') {
+    describe('chunkData', function () {
+        it('This should create 2 arrays with 4 elements each', function () {
+            // this checks chunkData()
+            let testArray = [11, 22, 33, 44, 55, 66, 77, 88]
+            let testTemp = chunkData(testArray, 4);
+            assert.equal(testTemp.length, 2);
+            assert.equal(testTemp[0].length, 4)
+            assert.equal(testTemp[1].length, 4)
+            assert.equal(testTemp[0][0], '11')
+            assert.equal(testTemp[1][0], '55')
+        });
+
+    });
+}
+
+if (typeof describe === 'function') {
+    describe('reverseData', function () {
+        it('This should return the array in reverse order', function () {
+            // this checks reverseData()
+            let testArray2 = [11, 22, 33, 44, 55, 66, 77, 88]
+            let testTemp2 = reverseData(testArray2);
+            assert.equal(testTemp2[0], 88)
+            assert.equal(testTemp2[1], 77)
+            assert.equal(testTemp2[2], 66)
+            assert.equal(testTemp2[3], 55)
+            assert.equal(testTemp2[4], 44)
+            assert.equal(testTemp2[5], 33)
+            assert.equal(testTemp2[6], 22)
+            assert.equal(testTemp2[7], 11)
+        });
+    });
+}
+
+if (typeof describe === 'function') {
+    describe('withoutData', function () {
+        it('This should return the array without specified data', function () {
+            // this checks withoutData()
+            let testArray3 = [11, 22, 33, 44, 55, 66, 77, 88]
+            let testTemp3 = withoutData(testArray3, testArray3[1], testArray3[5]);
+            assert.equal(testTemp3.length, 6)
+            assert.equal(testTemp3[0], 11)
+            assert.equal(testTemp3[1], 33)
+            assert.equal(testTemp3[2], 44)
+            assert.equal(testTemp3[3], 55)
+            assert.equal(testTemp3[4], 77)
+            assert.equal(testTemp3[5], 88)
+        });
+    });
+}
+
+if (typeof describe === 'function') {
+    describe('shuffleData', function () {
+        it('This should return the array in a randomized order', function () {
+            // this checks shuffleData()
+            let testArray4 = [11, 22, 33, 44, 55, 66, 77, 88]
+            let testTemp4 = shuffleData(testArray4);
+            let arrayString = testArray4.toString()
+            let tempArrayString = testTemp4.toString()
+            assert.notEqual(arrayString, tempArrayString)
+        });
+    });
+}
+
+if (typeof describe === 'function') {
+    describe('sizeData', function () {
+        it('This should return the size/length of the data collection', function () {
+            // this checks shuffleData()
+            let testArray5 = [11, 22, 33, 44, 55, 66, 77, 88]
+            let testTemp5 = sizeData(testArray5);
+            assert.equal(testArray5.length, testTemp5)
+        });
+    });
+}
